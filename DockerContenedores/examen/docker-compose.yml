@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./contenedor-nginx/Dockerfile
+    container_name: contenedor_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./sitio-web:/usr/share/nginx/html
+    networks:
+      - red_examen
+
+  mysql:
+    build: ./contenedor-mysql
+    container_name: contenedor_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: benat
+      MYSQL_PASSWORD: benat
+      MYSQL_DATABASE: examen
+    volumes:
+      - datos_mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+     - red_examen  
+
+  phpmyadmin:
+    build: ./contenedor-phpmyadmin
+    container_name: contenedor_phpmyadmin
+    environment:
+      PMA_HOST: contenedor_mysql
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - red_examen 
+volumes:
+  datos_mysql:
+networks:
+  red_examen:
