@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: mongo:latest
+    networks:
+      - node_db
+
+
+  web:
+    image: node:latest
+    working_dir: /work 
+    volumes:
+      - ./web:/work
+    networks:
+      - node_db 
+
+    ports:
+      - "8000:3000"
+
+    command: node server.js
+    environment:
+      - MONGO_IP=db
+
+  test:
+    container_name: curl_test
+    image: alpine/curl:latest
+
+
+networks:
+  node_db:

@@ -6,7 +6,7 @@ docker rmi nombre/ID	    Elimina una imagen.
 docker pull nombre	      Descarga una imagen desde Docker Hub.
 
 Contenedores
-
+docker rm nombre_o_id_del_contenedor
 docker-compose up	       Levanta los contenedores definidos en docker-compose.yml.
 docker-compose up -d	   Lo mismo, pero en segundo plano (modo "detached").
 docker-compose down	     Detiene y elimina contenedores, red y volúmenes temporales.
@@ -30,10 +30,61 @@ docker network create nombre	Crea una red personalizada.
 docker network rm nombre	    Elimina una red.
 docker network inspect nombre	Muestra detalles de la red.
 
-Conocer los puertos por defecto de servicios comunes
 
+
+Conocer los puertos por defecto de servicios comunes
 Nginx/Apache	80
 MySQL	        3306
 phpMyAdmin	  80
 PostgreSQL	  5432
 Redis	        6379
+
+
+docker exec -it nginx bash
+docker ps -a
+docker image inspect
+
+CREAR RED
+    docker network create red-ejercicio
+
+
+CREAR VOLUMEN
+    docker volume create volumen-mysql
+
+DESCARGAR IMAGENES
+    docker pull nginx:latest
+    docker pull mysql:5.7
+    docker pull phpmyadmin/phpmyadmin:latest
+
+    docker images
+
+CREAR LOS CONTENEDORES
+NGINX
+    docker create 
+  --name nginx_html 
+  --network red-ejercicio 
+  -p 8080:80 
+  -v ./html:/usr/share/nginx/html:ro //si no funciona poner toda la ruta entre comillas dobles "C:\Users\benat\Desktop\apuntes_docker\DockerContenedores\HTMLYMSQCONCOMANDOS\html\index.html"
+  nginx
+
+
+MYSQL
+    docker create 
+  --name mysql_db 
+  --network red-ejercicio 
+  -e MYSQL_ROOT_PASSWORD=root123 
+  -e MYSQL_DATABASE=midb 
+  -e MYSQL_USER=usuario 
+  -e MYSQL_PASSWORD=clave123 
+  -v volumen-mysql:/var/lib/mysql 
+  mysql:5.7
+
+PHPMYADMIN
+    docker create 
+  --name phpmyadmin 
+  --network red-ejercicio 
+  -e PMA_HOST=mysql_db 
+  -e PMA_USER=usuario 
+  -e PMA_PASSWORD=clave123 
+  -p 8081:80 
+  phpmyadmin/phpmyadmin
