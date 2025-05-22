@@ -40,6 +40,7 @@ PostgreSQL	  5432
 Redis	        6379
 
 docker start nombre
+docker stop
 docker exec -it nginx bash
 docker ps -a
 docker image inspect
