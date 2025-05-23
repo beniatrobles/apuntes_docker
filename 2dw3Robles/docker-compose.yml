@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  php:
+    build: ./contenedorphp
+    container_name: ApacheBenatRobles
+    ports:
+      - "8000:80"
+    volumes:
+      - volumen_php:/var/www/html/
+    networks:
+      - red_examen
+  mysql:
+    image: mysql:8
+    container_name: mysqlBenatRobles
+    environment:
+      MYSQL_ROOT_PASSWORD: admin1234
+      MYSQL_USER: benatrobles
+      MYSQL_PASSWORD: admin1234
+      MYSQL_DATABASE: examen
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - red_examen
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: AdminNombreRobles
+    environment:
+      PMA_HOST: mysqlBenatRobles
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - red_examen
+
+volumes:
+  volumen_php:
+  dbdata:
+networks:
+  red_examen:
+
+
+

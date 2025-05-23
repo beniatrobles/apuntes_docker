@@ -89,3 +89,75 @@ PHPMYADMIN
   -e PMA_PASSWORD=clave123 
   -p 8081:80 
   phpmyadmin/phpmyadmin
+
+
+
+
+
+
+
+  version: '3.8'
+
+services:
+#   # php:
+#   #   build: ./contenedor-php
+#   #   container_name: contenedor_php
+#   #   volumes:
+#   #     - ./sitio-web:/var/www/html
+#   #   networks:
+#   #     - red_web
+
+#   # apache:
+#   #   build: ./contenedor-apache
+#   #   container_name: contenedor_apache
+#   #   ports:
+#   #     - "80:80"
+#   #   volumes:
+#   #     - ./sitio-web:/usr/local/apache2/htdocs/
+#   #   depends_on:
+#   #     - php
+#   #   networks:
+#   #     - red_web
+  nginx:
+    image: nginx:alpine
+    container_name: contenedor_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./sitio-web:/usr/share/nginx/html
+    networks:
+      - red_web
+
+  mysql:
+    image: mysql:8
+    container_name: contenedor_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: benat
+      MYSQL_PASSWORD: benat
+      MYSQL_DATABASE: examen
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - red_web
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: contenedor_phpmyadmin
+    environment:
+      PMA_HOST: contenedor_mysql
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - red_web
+
+volumes:
+  mysql_data:
+
+networks:
+  red_web:
